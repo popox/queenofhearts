@@ -1,5 +1,5 @@
 .bundle
-vendor/
+/vendor/
 .idea/
 log/development.log
 log/development.err.log
