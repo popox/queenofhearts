@@ -11,5 +11,6 @@ popd
 
 # Configure NGINX
 mkdir -p /etc/nginx/sites-enabled
+rm -rf /etc/nginx/sites-enables/*
 cp /home/app/dev.queenofhearts.io.conf /etc/nginx/sites-enabled
 
