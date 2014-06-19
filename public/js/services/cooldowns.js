@@ -1,5 +1,5 @@
 
-angular.module('app').factory('cooldowns', function($socket){
+angular.module('app').factory('cooldowns', function(){
 
   function Cooldown(opts){
     this.iconCode = opts.iconCode;
@@ -7,13 +7,13 @@ angular.module('app').factory('cooldowns', function($socket){
     this.duration = opts.duration;
     this.color = opts.color;
     this.lastClick = opts.lastClick;
-    this.track = opts.track;
+    this.idea = opts.idea;
     this.loading = false;
   }
 
-  Cooldown.prototype.use = function(track){
+  Cooldown.prototype.use = function(idea){
 
-    track = track || this.track;
+    idea = idea || this.idea;
 
     // Check if ok
     if( Date.now() < this.lastClick + this.duration ){
@@ -22,12 +22,6 @@ angular.module('app').factory('cooldowns', function($socket){
     else {
       this.loading = true;
       var cooldown = this;
-
-      // Update the track (todo in services also ...)
-      $socket.emit(this.action, {trackId: track.id}, function(){
-        cooldown.loading = false;
-        cooldown.lastClick = Date.now();
-      });
     }
 
   }
@@ -47,8 +41,8 @@ angular.module('app').factory('cooldowns', function($socket){
   var lastClick = Date.now() - 50000;
 
   return {
-    upvote: function(track){
-      return new Cooldown({ action: "upvote", iconCode: 0xf067, duration: 3000, color: '#39CCCC', lastClick: lastClick, track: track })
+    upvote: function(idea){
+      return new Cooldown({ action: "upvote", iconCode: 0xf067, duration: 3000, color: '#39CCCC', lastClick: lastClick, idea: idea })
     }
   };
 

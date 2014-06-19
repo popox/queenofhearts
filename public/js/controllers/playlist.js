@@ -2,71 +2,66 @@
 // Playlist controller
 // ===================
 
-angular.module('app').controller('PlaylistCtrl', function($scope, $timeout, cooldowns, tracks, User, $socket) {
+angular.module('app').controller('PlaylistCtrl', function($scope, $timeout, cooldowns, ideas, User, $api) {
 
   $scope.hiddenCooldowns = [cooldowns.multiply, cooldowns.spotlight];
 
-  $scope.currentTrack = null;
+  $scope.currentIdea = null;
   $scope.user = User;
-  $scope.tracks = tracks;
+  $scope.ideas = ideas;
 
-  $scope.isStar = function(track) {
-    return track.id === $scope.user.currentStarId;
+  $scope.isStar = function(idea) {
+    return idea.id === $scope.user.currentStarId;
   };
 
-  $scope.doStar = function(track) {
-    if ($scope.user.currentStarId === track.id) {
+  $scope.doStar = function(idea) {
+    if ($scope.user.currentStarId === idea.id) {
       // $scope.user.currentStarId = null;
     }
     else {
-      $socket.emit('star', {userId: User.id, trackId: track.id}, function(){
-        $scope.user.currentStarId = track.id;
+      $api.vote({userId: User.id, ideaId: idea.id}, function(){
+        $scope.user.currentStarId = idea.id;
       });
     }
   };
 
 
-  $scope.openSlide = function(track) {
-    $scope.currentTrack = track;
+  $scope.openSlide = function(idea) {
+    $scope.currentIdea = idea;
   };
 
   $scope.closeSlide = function() {
-    $scope.currentTrack = null;
+    $scope.currentIdea = null;
   };
 
-  $scope.toggleSlide = function(track) {
-    if ($scope.currentTrack === track) {
+  $scope.toggleSlide = function(idea) {
+    if ($scope.currentIdea === idea) {
       $scope.closeSlide();
     }
     else {
-      $scope.openSlide(track);
+      $scope.openSlide(idea);
     }
   };
 
   // Watch the playlist changes
-  $scope.$watchCollection('tracks', function(){
+  $scope.$watchCollection('ideas', function(){
 
     // Gradual entering
-    var playlist = _.sortBy(_.values(tracks), function(track){
-      return -1 * track.score;
+    var playlist = _.sortBy(_.values(ideas), function(idea){
+      return -1 * idea.score;
     });
 
-    var newTrack;
+    var newIdea;
     $scope.playlist = [];
     var gradualAppend = function(){
-      newTrack = playlist.shift();
-      if (!!newTrack) {
-        $scope.playlist.push(newTrack);
+      newIdea = playlist.shift();
+      if (!!newIdea) {
+        $scope.playlist.push(newIdea);
         $timeout(gradualAppend, 100);
       }
-    }
+    };
 
     gradualAppend();
-  });
-
-  // Bootstrap the current star
-  $socket.on('currentStar', function(currentStarId){
-    $scope.user.currentStarId = currentStarId;
   });
 
 });

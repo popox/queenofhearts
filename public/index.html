@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
     <meta http-equiv="cleartype" content="on">
 
-    <link href='http://fonts.googleapis.com/css?family=Lato:100,400,900,100italic,400italic,900italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Lato:100,400,900,100italic,400italic,900italic' rel='stylesheet' type='text/css'>
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
     <link rel="stylesheet" type="text/css" href="/css/normalize.css">
@@ -15,8 +15,7 @@
     <link rel="stylesheet" type="text/css" href="/css/cooldown.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
 
-    <script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
     <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-animate.js"></script>
@@ -28,20 +27,17 @@
 
 
     <!-- TODO better, dev vs prod conf -->
-    <script type="text/javascript" src="http://playlist.mru2.com:3456/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="http://localhost:3457/socket.io/socket.io.js"></script>
-
     <script type="text/javascript" src="/js/main.js"></script>
 
-    <script type="text/javascript" src="/js/services/socket.js"></script>
+    <script type="text/javascript" src="/js/services/api.js"></script>
     <script type="text/javascript" src="/js/services/cooldowns.js"></script>
-    <script type="text/javascript" src="/js/services/tracks.js"></script>
+    <script type="text/javascript" src="/js/services/ideas.js"></script>
     <script type="text/javascript" src="/js/services/user.js"></script>
 
     <script type="text/javascript" src="/js/directives/cooldown.js"></script>
 
     <script type="text/javascript" src="/js/controllers/playlist.js"></script>
-    <script type="text/javascript" src="/js/controllers/search.js"></script>
+    <script type="text/javascript" src="/js/controllers/add.js"></script>
 
   </head>
 
@@ -56,8 +52,8 @@
           <span class="dot dot2">.</span>
           <span class="dot dot3">.</span>
           Queen Of Hearts
-          <i class="fa fa-search" ng-click="isSearch = true" ng-show="!isSearch"></i>
-          <i class="fa fa-bars" ng-click="isSearch = false" ng-show="isSearch"></i>
+          <i class="fa fa-plus-circle" ng-click="isAdd = true" ng-show="!isAdd"></i>
+          <i class="fa fa-bars" ng-click="isAdd = false" ng-show="isAdd"></i>
         </h2>
       </div>
     </div>
@@ -77,39 +73,40 @@
 
       <div ng-cloak ng-show="appLoaded">
 
-        <!-- Search -->
-        <div ng-controller="SearchCtrl" ng-show="isSearch">
+        <!-- add -->
+        <div ng-controller="AddCtrl" ng-show="isAdd">
 
-          <div class="row collapse search" id="search">
-            <form ng-submit="doSearch()">
-              <input type="search" placeholder="Ajouter un morceau" ng-model="query"></input>
-              <input type="submit" style="display:none;"></input>
+          <div class="row collapse add" id="add">
+            <form ng-submit="doAdd()">
+              <input type="text" placeholder="Title of your idea" ng-model="title" />
+              <textarea ng-model="body" ></textarea>
+              <input type="submit" style="" />
             </form>
           </div>
 
           <div class="row" ng-show="firstView">
-            <p class="search-help">Recherchez un artiste ou un titre, puis appuyez sur <i class="fa fa-plus-circle"></i> pour le rajouter à la playlist en cours.</p>
+            <p class="add-help">Fill in your idea then click on <input type="submit" style="" /> to add to the box.</p>
           </div>
 
-          <div class="row searching" ng-show="searching">
+          <div class="row adding" ng-show="adding">
             <div class="spinner">
               <div class="inner"></div>
             </div>
           </div>
 
-          <ul class="search-results row" ng-hide="searching">
-            <li ng-repeat="track in results" class="track">
+          <ul class="add-results row" ng-hide="adding">
+            <li ng-repeat="idea in results" class="track">
               <div class="front row">
 
                 <div class="add">
-                  <i class="fa fa-plus-circle" ng-click="addTrack(track)" ng-show="track.status === undefined"></i>
-                  <i class="fa fa-spinner fa-spin" ng-show="track.status === 'adding'"></i>
-                  <i class="fa fa-check track-added" ng-show="track.status === 'added'"></i>
+                  <i class="fa fa-plus-circle" ng-click="addIdea(idea)" ng-show="idea.status === undefined"></i>
+                  <i class="fa fa-spinner fa-spin" ng-show="idea.status === 'adding'"></i>
+                  <i class="fa fa-check track-added" ng-show="idea.status === 'added'"></i>
                 </div>
 
                 <div class="track-details">
-                  <strong>{{ track.title }}</strong>
-                  <em>{{ track.artist.name }}</em>
+                  <strong>{{ idea.title }}</strong>
+                  <em>{{ idea.body }}</em>
                 </div>
 
               </div>
@@ -120,31 +117,27 @@
 
 
         <!-- Playlist -->
-        <ul id="playlist" ng-controller="PlaylistCtrl" class="row" ng-show="!isSearch">
+        <ul id="playlist" ng-controller="PlaylistCtrl" class="row" ng-show="!isAdd">
 
           <div ng-show="playlist.length === 0">
-            <p class="notracks">The playlist is empty :( &nbsp;&nbsp; Add some tracks with the search in the top right</p>
+            <p class="notracks">The box is empty, please add an idea with the top right button</p>
           </div>
 
-          <li ng-repeat="track in playlist | orderBy:'score':true" class="track small-12 columns" ng-class="(currentTrack === track) ? 'slide' : ''">
-
+          <li ng-repeat="idea in playlist | orderBy:'score':true" class="track small-12 columns" ng-class="(currentIdea === idea) ? 'slide' : ''">
               <div class="toggle-switch">
-                <cooldown cooldown="track.cooldown" ng-click="track.cooldown.use()" size="40"></cooldown>
+                <cooldown cooldown="idea.cooldown" ng-click="idea.cooldown.use()" size="40"></cooldown>
               </div>
 
               <div class="front row">
                 <div class="score">
-                  <span>{{ track.score }}</span>                 
+                  <span>{{ idea.score }}</span>
                 </div>
 
                 <div class="track-details">
-                  <strong>{{ track.title }}</strong>
-                  <em>{{ track.artist }}</em>
+                  <strong>{{ idea.title }}</strong>
+                  <em>{{ idea.body }}</em>
                 </div>
               </div>
-
-
-            </div>
           </li>
         </ul>
 
