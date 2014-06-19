@@ -6,7 +6,7 @@ development:
   database: queen_dev
   username: queen_dev
   password: queen_dev
-  host: mysql
+  host: localhost
   port: 3306
 
 test:
