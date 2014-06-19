@@ -1,4 +1,5 @@
 .bundle
 vendor/
 .idea/
-log/
+log/development.log
+log/development.err.log
