@@ -4,7 +4,7 @@ class VoteController  < Yodatra::Base
     content_type 'application/json'
   end
 
-  get '/ideas/:id/vote' do
+  post '/ideas/:id/vote' do
     # Authorization
     return unless user_allowed?
 
