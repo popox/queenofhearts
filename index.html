@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DJ COLOC</title>
+  <title>Ideas</title>
   
   <link rel="stylesheet" type="text/css" href="/normalize.css">
   <link rel="stylesheet" type="text/css" href="/foundation.min.css">
@@ -13,15 +13,15 @@
 <div id="dz-root"></div>
 
 <div class="row">
-  <h1>DJCOLOC</h1>
+  <h1>Ideas</h1>
 
-  <p>Vote pour le prochain morceau, ou rajoute-en un dans la liste</p>
+  <p>Vote pour la prochaine feature, ou rajoute-en un dans la liste</p>
 </div>
 
 <form id="searchForm">
   <div class="row collapse">
     <div class="small-9 columns">
-      <input id="search" type="text" placeholder="Ajouter un morceau"/>
+      <input id="search" type="text" placeholder="Chercher une idea"/>
     </div>
     <div class="small-3 columns">
       <input type="submit" value="Rechercher" class="button postfix"/>
@@ -29,8 +29,19 @@
   </div>
 </form>
 
+<form id="addIdea">
+    <div class="row collapse">
+        <div class="small-9 columns">
+            <input name="title" type="text" placeholder="Ajouter une idea"/>
+        </div>
+        <div class="small-3 columns">
+            <input type="submit" value="Ajouter" class="button postfix"/>
+        </div>
+    </div>
+</form>
+
 <div class="row">
-  <h2 id="title">Playlist en cours</h2>
+  <h2 id="title">Projet en cours</h2>
 </div>
 
 <ul id="results">
@@ -38,7 +49,6 @@
 </ul>
 
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
 <script type="text/javascript" src="/public.js"></script>
 
 </body>

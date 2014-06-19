@@ -1,56 +1,51 @@
-var allTracks = [];
+var allIdeas = [];
 var isAdmin = (window.location.search === "?cestquilepatron");
 
 $(document).ready(onReady);
 
-DZ.init({
-  appId  : '129845',
-  channelUrl : '/channel'
-});
-
-function vote(trackId, score){
+function vote(ideaId, score){
   score = score || 1;
-  var track = allTracks[trackId];
-  console.log('voting for', track);
-  $.get('/api/vote', {track_id: trackId, title: track.title, artist: track.artist, score: score}, function(res){
+  var idea = allIdeas[ideaId];
+  console.log('voting for', idea);
+  $.get('/api/vote', {idea_id: ideaId, title: idea.title, artist: idea.artist, score: score}, function(res){
     window.location.href = window.location.href; // reloading
   });
 }
 
-function appendTrack(cont, track_id, title, artist, score){
+function appendIdea(cont, idea_id, title, artist, score){
 
-  // Store the track for data when voting
-  allTracks[track_id] = {title: title, artist: artist}
+  // Store the idea for data when voting
+  allIdeas[idea_id] = {title: title, artist: artist}
 
-  var trackDom = '<li class="row">';
+  var ideaDom = '<li class="row">';
 
-    trackDom += '<div class="small-12 columns">';
+    ideaDom += '<div class="small-12 columns">';
 
       if(score !== undefined){
-        trackDom += '<a class="button right" onclick="vote(' + track_id + ');">+1</a>';
+        ideaDom += '<a class="button right" onclick="vote(' + idea_id + ');">+1</a>';
       }
       else {
-        trackDom += '<a class="button right" onclick="vote(' + track_id + ');">Ajouter</a>';    
+        ideaDom += '<a class="button right" onclick="vote(' + idea_id + ');">Ajouter</a>';    
       }
 
       // Admin
       if(isAdmin){
-        trackDom += ' <a class="button right" onclick="vote(' + track_id + ', 100);">+100</a> ';        
-        trackDom += ' <a class="button right" onclick="vote(' + track_id + ', -100);">-100</a> ';        
+        ideaDom += ' <a class="button right" onclick="vote(' + idea_id + ', 100);">+100</a> ';        
+        ideaDom += ' <a class="button right" onclick="vote(' + idea_id + ', -100);">-100</a> ';        
       }
 
       if(score !== undefined){
-        trackDom += '<span>' + score  + '</span>';        
+        ideaDom += '<span>' + score  + '</span>';        
       }
 
-      trackDom += '<em>' + artist + '</em>' + ' ';
-      trackDom += '<strong>' + title + '</strong>' + ' ';
-    trackDom += '</div>';
+      ideaDom += '<em>' + artist + '</em>' + ' ';
+      ideaDom += '<strong>' + title + '</strong>' + ' ';
+    ideaDom += '</div>';
 
 
-  trackDom += '</li>';
+  ideaDom += '</li>';
 
-  cont.append(trackDom);
+  cont.append(ideaDom);
 
 }
 
@@ -62,14 +57,14 @@ function onReady(){
   // TODO : optimize : store the data in redis directly
 
   $.getJSON('/api/top', function(res){
-    console.log('top tracks', res);
+    console.log('top ideas', res);
 
     $results.html("");
 
     for (var i = 0; i < res.length; i++) {
 
-      var track = res[i];
-      appendTrack($results, track.id, track.title, track.artist, track.score);
+      var idea = res[i];
+      appendIdea($results, idea.id, idea.title, idea.artist, idea.score);
 
     }
   });
@@ -78,7 +73,7 @@ function onReady(){
     e.preventDefault();
 
     $results.html("Searching...");
-    allTracks = [];
+    allIdeas = [];
 
     var query = $("#search").val();
 
@@ -90,10 +85,10 @@ function onReady(){
       $results.html("");
       $('#title').html('Recherche : ' + query);
 
-      $.each(res.data, function(index, track){
+      $.each(res.data, function(index, idea){
 
-        if(track.readable && track.type === "track"){
-          appendTrack($results, track.id, track.title, track.artist.name);
+        if(idea.readable && idea.type === "idea"){
+          appendIdea($results, idea.id, idea.title, idea.artist.name);
         }
 
       });
@@ -101,4 +96,15 @@ function onReady(){
 
   });
 
+  $("form#addIdea").on('submit', function(e){
+    e.preventDefault();
+
+    $results.html("Adding...");
+    allIdeas = [];
+
+    $.post('/api/add', $(this).serialize(), function(data) {
+
+    });
+
+  });
 }

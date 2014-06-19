@@ -1,23 +1,28 @@
 require 'rack'
 require 'rack/contrib/try_static'
 require 'rack/contrib/not_found'
+require 'rack/rewrite'
+require 'rack/parser'
 
-require './api.rb'
+require File.dirname(__FILE__)+'/api'
 
-root_directory = ::File.expand_path('..',  __FILE__)
+use Rack::Parser, :parsers => { 'application/json' => proc { |data| JSON.parse data } }
 
-map "/api" do
+use Rack::Rewrite do
+  rewrite %r{^/\w{2}/api},  '/api'
+end
+
+map '/api' do
   run Api
 end
 
-
-map "/" do  
+map '/' do
 
   use Rack::TryStatic,
-    :root => ::File.join(root_directory, '.'),
-    :urls => %w(/),
-    :try  => ['.html', 'index.html', '/index.html']
+      :root => ::File.join(File.dirname(__FILE__), '.'),
+      :urls => %w(/),
+      :try  => ['.html', 'index.html', '/index.html']
 
 end
 
-run Rack::NotFound.new(::File.join(root_directory, '404.html'))
+run Rack::NotFound.new(::File.join(File.dirname(__FILE__), '404.html'))

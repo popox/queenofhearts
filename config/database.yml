@@ -1,0 +1,33 @@
+development:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  database: queen_dev
+  username: queen_dev
+  password: queen_dev
+  host: mysql
+  port: 3306
+
+test:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  database: queen_test
+  username: queen_dev
+  password: queen_dev
+  host: mysql
+  port: 3306
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  reconnect: false
+  pool: 5
+  database: <%=ENV['OPENSHIFT_APP_NAME']%>
+  username: <%=ENV['OPENSHIFT_DB_MYSQL_USERNAME']%>
+  password: <%=ENV['OPENSHIFT_DB_MYSQL_PASSWORD']%>
+  host: <%=ENV['OPENSHIFT_DB_MYSQL_HOST']%>
+  port: <%=ENV['OPENSHIFT_DB_MYSQL_PORT']%>
+
