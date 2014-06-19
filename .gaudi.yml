@@ -3,7 +3,7 @@ applications:
     type: custom
     template: ./Dockerfile
     ports:
-      8080: 80
+      80: 80
       2222: 22
     volumes:
       .: /home/app
