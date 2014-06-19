@@ -15,4 +15,4 @@ applications:
     type: custom
     template: ./mysql/Dockerfile
     volumes:
-      /tmp/mysql_st: /var/lib/mysql
+      /tmp/mysql_queen: /var/lib/mysql
