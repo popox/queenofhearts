@@ -1,55 +1,155 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ideas</title>
-  
-  <link rel="stylesheet" type="text/css" href="/normalize.css">
-  <link rel="stylesheet" type="text/css" href="/foundation.min.css">
-  <link rel="stylesheet" type="text/css" href="/style.css">
-</head>
-<body>
-<div id="dz-root"></div>
+<html ng-app="app">
+  <head>
+    <title>PLST</title>
 
-<div class="row">
-  <h1>Ideas</h1>
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="640">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
+    <meta http-equiv="cleartype" content="on">
 
-  <p>Vote pour la prochaine feature, ou rajoute-en un dans la liste</p>
-</div>
+    <link href='http://fonts.googleapis.com/css?family=Lato:100,400,900,100italic,400italic,900italic' rel='stylesheet' type='text/css'>
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 
-<form id="searchForm">
-  <div class="row collapse">
-    <div class="small-9 columns">
-      <input id="search" type="text" placeholder="Chercher une idea"/>
+    <link rel="stylesheet" type="text/css" href="/css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="/css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/cooldown.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+
+    <script type="text/javascript" src="http://cdn-files.deezer.com/js/min/dz.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-animate.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-cookies.js"></script>
+    <script type="text/javascript" src="/js/vendor/animationframe.js"></script>
+    <script type="text/javascript">
+      AnimationFrame.shim();
+    </script>
+
+
+    <!-- TODO better, dev vs prod conf -->
+    <script type="text/javascript" src="http://playlist.mru2.com:3456/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://localhost:3457/socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="/js/main.js"></script>
+
+    <script type="text/javascript" src="/js/services/socket.js"></script>
+    <script type="text/javascript" src="/js/services/cooldowns.js"></script>
+    <script type="text/javascript" src="/js/services/tracks.js"></script>
+    <script type="text/javascript" src="/js/services/user.js"></script>
+
+    <script type="text/javascript" src="/js/directives/cooldown.js"></script>
+
+    <script type="text/javascript" src="/js/controllers/playlist.js"></script>
+    <script type="text/javascript" src="/js/controllers/search.js"></script>
+
+  </head>
+
+  <body>
+    <div id="dz-root"></div>
+
+    <!-- Header -->
+    <div class="topbar">
+      <div class="row">
+        <h2 class="main-title">
+          <span class="dot dot1">.</span>
+          <span class="dot dot2">.</span>
+          <span class="dot dot3">.</span>
+          plst
+          <i class="fa fa-search" ng-click="isSearch = true" ng-show="!isSearch"></i>
+          <i class="fa fa-bars" ng-click="isSearch = false" ng-show="isSearch"></i>
+        </h2>
+      </div>
     </div>
-    <div class="small-3 columns">
-      <input type="submit" value="Rechercher" class="button postfix"/>
-    </div>
-  </div>
-</form>
 
-<form id="addIdea">
-    <div class="row collapse">
-        <div class="small-9 columns">
-            <input name="title" type="text" placeholder="Ajouter une idea"/>
+    <div class="main-container">
+
+      <div ng-hide="appLoaded">
+        <div id="loading">
+
+          <div class="spinner">
+            <div class="inner"></div>
+          </div>
+
+          <p>Loading...</p>
         </div>
-        <div class="small-3 columns">
-            <input type="submit" value="Ajouter" class="button postfix"/>
+      </div>
+
+      <div ng-cloak ng-show="appLoaded">
+
+        <!-- Search -->
+        <div ng-controller="SearchCtrl" ng-show="isSearch">
+
+          <div class="row collapse search" id="search">
+            <form ng-submit="doSearch()">
+              <input type="search" placeholder="Ajouter un morceau" ng-model="query"></input>
+              <input type="submit" style="display:none;"></input>
+            </form>
+          </div>
+
+          <div class="row" ng-show="firstView">
+            <p class="search-help">Recherchez un artiste ou un titre, puis appuyez sur <i class="fa fa-plus-circle"></i> pour le rajouter à la playlist en cours.</p>
+          </div>
+
+          <div class="row searching" ng-show="searching">
+            <div class="spinner">
+              <div class="inner"></div>
+            </div>
+          </div>
+
+          <ul class="search-results row" ng-hide="searching">
+            <li ng-repeat="track in results" class="track">
+              <div class="front row">
+
+                <div class="add">
+                  <i class="fa fa-plus-circle" ng-click="addTrack(track)" ng-show="track.status === undefined"></i>
+                  <i class="fa fa-spinner fa-spin" ng-show="track.status === 'adding'"></i>
+                  <i class="fa fa-check track-added" ng-show="track.status === 'added'"></i>
+                </div>
+
+                <div class="track-details">
+                  <strong>{{ track.title }}</strong>
+                  <em>{{ track.artist.name }}</em>
+                </div>
+
+              </div>
+            </li>
+          </ul>
+
         </div>
+
+
+        <!-- Playlist -->
+        <ul id="playlist" ng-controller="PlaylistCtrl" class="row" ng-show="!isSearch">
+
+          <div ng-show="playlist.length === 0">
+            <p class="notracks">The playlist is empty :( &nbsp;&nbsp; Add some tracks with the search in the top right</p>
+          </div>
+
+          <li ng-repeat="track in playlist | orderBy:'score':true" class="track small-12 columns" ng-class="(currentTrack === track) ? 'slide' : ''">
+
+              <div class="toggle-switch">
+                <cooldown cooldown="track.cooldown" ng-click="track.cooldown.use()" size="40"></cooldown>
+              </div>
+
+              <div class="front row">
+                <div class="score">
+                  <span>{{ track.score }}</span>                 
+                </div>
+
+                <div class="track-details">
+                  <strong>{{ track.title }}</strong>
+                  <em>{{ track.artist }}</em>
+                </div>
+              </div>
+
+
+            </div>
+          </li>
+        </ul>
+
+      </div>
     </div>
-</form>
 
-<div class="row">
-  <h2 id="title">Projet en cours</h2>
-</div>
-
-<ul id="results">
-
-</ul>
-
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
-<script type="text/javascript" src="/public.js"></script>
-
-</body>
+  </body>
 </html>
