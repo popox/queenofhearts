@@ -156,6 +156,7 @@ Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     vb.customize ["modifyvm", :id, "--natdnsproxy1", "on"]
     vb.memory = 512
+    #vb.gui = true
   end
 end
 

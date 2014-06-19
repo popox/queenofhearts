@@ -3,3 +3,5 @@ vendor/
 .idea/
 log/development.log
 log/development.err.log
+.vagrant/
+

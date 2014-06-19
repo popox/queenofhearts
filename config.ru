@@ -19,7 +19,7 @@ end
 map '/' do
 
   use Rack::TryStatic,
-      :root => ::File.join(File.dirname(__FILE__), '.'),
+      :root => ::File.join(File.dirname(__FILE__), 'public/'),
       :urls => %w(/),
       :try  => ['.html', 'index.html', '/index.html']
 
