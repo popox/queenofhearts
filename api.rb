@@ -4,6 +4,8 @@ require 'yodatra/logger'
 require 'yodatra/api_formatter'
 require 'yodatra/throttling'
 
+require 'rack/cors'
+
 # ############## #
 # Queen API #
 # ############## #
@@ -12,6 +14,13 @@ class Api < Yodatra::Base
   config = Queen::Application::CONFIG
   use Yodatra::Logger
   use Yodatra::Throttle, redis_conf: config.redis
+
+  use Rack::Cors do
+    allow do
+      origins '*'
+      resource '*', :headers => :any, :methods => [:get, :post, :options]
+    end
+  end
 
   # api formatter
   use Yodatra::ApiFormatter do |status, headers, response|
@@ -23,7 +32,6 @@ class Api < Yodatra::Base
       body = response.empty? ? '' : response.first
       response = [{:data => data, :errors => errors}.to_json.gsub(replace, body)]
     end
-    headers['Access-Control-Allow-Origin'] = '*'
     [status, headers, response]
   end
 

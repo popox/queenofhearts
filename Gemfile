@@ -9,6 +9,7 @@ gem 'rack'
 gem 'rack-contrib', :git => 'https://github.com/rack/rack-contrib.git', :require => false # 1.2.0 not yet on rubygems...
 gem 'rack-rewrite'
 gem 'rack-parser', :require => 'rack/parser'
+gem 'rack-cors', :require => 'rack/cors'
 
 # DB adapter
 gem 'mysql2'
