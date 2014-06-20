@@ -1,5 +1,5 @@
 
-angular.module('app').factory('cooldowns', function(){
+angular.module('app').factory('cooldowns', function($rootScope){
 
   function Cooldown(opts){
     this.iconCode = opts.iconCode;
@@ -21,10 +21,12 @@ angular.module('app').factory('cooldowns', function(){
     }
     else {
       this.loading = true;
-      var cooldown = this;
+
+      // Update the idea (todo in services also ...)
+      $rootScope.$emit(this.action, {ideaId: idea.id, cooldown: this});
     }
 
-  }
+  };
 
   Cooldown.prototype.completion = function(){
     var delta = Date.now() - this.lastClick;
@@ -35,14 +37,13 @@ angular.module('app').factory('cooldowns', function(){
     else {
       return delta / this.duration;
     }
-  }
-
+  };
 
   var lastClick = Date.now() - 50000;
 
   return {
     upvote: function(idea){
-      return new Cooldown({ action: "upvote", iconCode: 0xf067, duration: 3000, color: '#39CCCC', lastClick: lastClick, idea: idea })
+      return new Cooldown({ action: "push", iconCode: 0xf067, duration: 3000, color: '#39CCCC', lastClick: lastClick, idea: idea })
     }
   };
 

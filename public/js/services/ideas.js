@@ -9,6 +9,7 @@ angular.module('app').factory('ideas', function($rootScope, $api, $timeout, cool
     this.score = opts.score;
     this.body = opts.body;
     this.title = opts.title;
+    this.project_id = 'clicrdv';
     this.cooldown = cooldowns.upvote(this);
     this.stars = opts.stars;
   }
@@ -54,7 +55,11 @@ angular.module('app').factory('ideas', function($rootScope, $api, $timeout, cool
   // Handling upvotes
   $rootScope.$on('push', function(e, data){
     var idea = _ideas[data.ideaId];
-    idea.bump(data.score - idea.score);
+    $api.vote({userId: User.id, ideaId: idea.id}, function(){
+      idea.bump(data.score - idea.score);
+      data.cooldown.loading = false;
+      data.cooldown.lastClick = Date.now();
+    });
   });
 
   // Handling updates

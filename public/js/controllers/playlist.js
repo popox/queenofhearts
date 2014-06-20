@@ -19,9 +19,6 @@ angular.module('app').controller('PlaylistCtrl', function($scope, $timeout, cool
       // $scope.user.currentStarId = null;
     }
     else {
-      $api.vote({userId: User.id, ideaId: idea.id}, function(){
-        $scope.user.currentStarId = idea.id;
-      });
     }
   };
 

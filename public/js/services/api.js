@@ -14,7 +14,7 @@ angular.module('app').factory('$api', function($rootScope, $http){
 
     vote: function(opts, callback) {
       // Do ajax POST /ideas/:id/vote
-      $http.post('/api/ideas/'+opts.ideaId+'/vote', params).
+      $http.post('/api/ideas/'+opts.ideaId+'/vote').
         success(function(response) {
           callback(response.data);
         }).
