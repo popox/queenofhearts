@@ -23,6 +23,7 @@ class Api < Yodatra::Base
       body = response.empty? ? '' : response.first
       response = [{:data => data, :errors => errors}.to_json.gsub(replace, body)]
     end
+    headers['Access-Control-Allow-Origin'] = '*'
     [status, headers, response]
   end
 
