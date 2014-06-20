@@ -34,6 +34,7 @@ angular.module('app').factory('$api', function($rootScope, $http, $location){
         }).
         error(function(data) {
           console.error(data.errors);
+          callback([]);
         });
     }
   };

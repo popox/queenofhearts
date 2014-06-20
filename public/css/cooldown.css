@@ -41,7 +41,7 @@ cooldown div.opening div.circle i{
   font-style: normal;
   font-weight: normal;
   text-decoration: inherit;
-  color: #222;
+  color: #fff;
   text-align: center;
   display: block;
   position: absolute;
@@ -73,7 +73,7 @@ cooldown .kudo.loading .circle{
   border-top: 4px solid #228FC4;
   border-bottom: 4px solid #228FC4;
   -webkit-animation: spin_inv 400ms infinite linear;
-  background-color: #222;
+  background-color: #fff;
 }
 
 cooldown a.kudobject{
