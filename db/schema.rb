@@ -10,15 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140619000907) do
+ActiveRecord::Schema.define(version: 20140620074713) do
 
   create_table "ideas", force: true do |t|
-    t.string   "title",      limit: 1000,  default: "", null: false
-    t.string   "body",       limit: 10000,              null: false
-    t.string   "user_id",                               null: false
-    t.integer  "score",                    default: 0,  null: false
+    t.string   "title",      limit: 1000,  default: "",  null: false
+    t.string   "body",       limit: 10000,               null: false
+    t.string   "user_id",                                null: false
+    t.integer  "score",                    default: 0,   null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "project_id", limit: 1000,  default: "0", null: false
   end
 
   add_index "ideas", ["title"], name: "index_ideas_on_title", length: {"title"=>767}, using: :btree

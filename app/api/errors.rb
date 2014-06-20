@@ -6,4 +6,5 @@ class Errors
   NOT_FOUND = 'api.not_found'
   UNAUTHORIZED = 'api.unauthorized'
   MISSING_PARAM = 'api.missing_parameter'
+  IMPOSSIBLE = 'api.impossible'
 end

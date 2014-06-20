@@ -28,7 +28,6 @@ class Api < Yodatra::Base
 
   use IdeasController
   use VoteController
-  use VoteController
 
   NO_ROUTE_PROC = lambda do
     status 400
