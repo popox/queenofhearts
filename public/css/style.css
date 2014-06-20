@@ -3,7 +3,7 @@
   #3c3c3c
   #462b80
   #5a37a7
-  #724bc5
+  #228FC4
 */
 
 
@@ -31,7 +31,7 @@ body{
   width: 100%;
   height: 76px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-  border-bottom: 4px solid #5a37a7;
+  border-bottom: 4px solid #228FC4;
 }
 
 .main-title{
@@ -55,9 +55,9 @@ body{
   letter-spacing: -0.15em;
 }
 
-.dot1{color: #462b80;}
-.dot2{color: #5a37a7;}
-.dot3{color: #724bc5; margin-right:5px;}
+.dot1{color: #79D3FF;}
+.dot2{color: #2CBAFF;}
+.dot3{color: #3C6A7F; margin-right:5px;}
 
 
 
@@ -372,8 +372,8 @@ li em {
   border-radius: 100%;  
   border-left: 4px solid rgba(0,0,0,0);
   border-right: 4px solid rgba(0,0,0,0);
-  border-top: 4px solid #724bc5;
-  border-bottom: 4px solid #724bc5;
+  border-top: 4px solid #228FC4;
+  border-bottom: 4px solid #228FC4;
   -webkit-animation: spin 1000ms infinite linear;
   position: relative;
   display: inline-block;
@@ -382,8 +382,8 @@ li em {
 .spinner .inner{
   border-left: 4px solid rgba(0,0,0,0);
   border-right: 4px solid rgba(0,0,0,0);
-  border-top: 4px solid #724bc5;
-  border-bottom: 4px solid #724bc5;
+  border-top: 4px solid #228FC4;
+  border-bottom: 4px solid #228FC4;
   -webkit-animation: spin_inv 400ms infinite linear;
   border-radius: 100%;  
   width: 24px;
