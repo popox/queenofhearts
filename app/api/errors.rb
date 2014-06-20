@@ -8,4 +8,5 @@ class Errors
   MISSING_PARAM = 'api.missing_parameter'
   IMPOSSIBLE = 'api.impossible'
   VOTE_IMPOSSIBLE = 'api.impossible'
+  BZZZZ = 'api.bzzzz.goodbye'
 end

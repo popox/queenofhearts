@@ -9,7 +9,6 @@ angular.module('app').factory('ideas', function($rootScope, $api, $timeout, cool
     this.score = opts.score;
     this.body = opts.body;
     this.title = opts.title;
-    this.project_id = 'clicrdv';
     this.cooldown = cooldowns.upvote(this);
     this.stars = opts.stars;
   }

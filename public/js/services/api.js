@@ -1,9 +1,12 @@
-angular.module('app').factory('$api', function($rootScope, $http){
+angular.module('app').factory('$api', function($rootScope, $http, $location){
+
+  var location = $location.path().split('/'), last_path = location[location.length -1];
+
 
   return {
     createIdea: function(idea, callback) {
       // Do ajax POST /ideas
-      $http.post('/api/ideas', idea).
+      $http.post('/api/ideas', angular.extend(idea, {project_id: last_path})).
         success(function(response) {
           callback(response.data);
         }).
@@ -25,7 +28,7 @@ angular.module('app').factory('$api', function($rootScope, $http){
 
     ideas: function(callback) {
       // Do ajax GET /ideas
-      $http.get('/api/ideas').
+      $http.get('/api/project/'+last_path+'/ideas').
         success(function(response) {
           callback(response.data);
         }).

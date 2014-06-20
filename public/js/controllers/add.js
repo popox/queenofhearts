@@ -17,7 +17,7 @@ angular.module('app').controller('AddCtrl', function($rootScope, $scope, $api, $
     $scope.adding = true;
 
     $scope.results = [];
-    $api.createIdea({title: $scope.title, body: $scope.body, project_id: 'clicrdv', user_id: 0}, function(res){
+    $api.createIdea({title: $scope.title, body: $scope.body, user_id: 0}, function(res){
       $scope.adding = false;
       $rootScope.isAdd = false;
 
