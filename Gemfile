@@ -21,7 +21,8 @@ gem 'redis'
 gem 'redis-rack'
 
 # Omniauth
-gem 'omniauth-github', '1.1.2'
+gem "omniauth-google-oauth2"
+
 
 gem 'rspec'
 group :development do

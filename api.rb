@@ -22,6 +22,12 @@ class Api < Yodatra::Base
     end
   end
 
+  # Omniauth
+  use Rack::Session::Redis, redis_server: config.redis, :expire_after => 3000
+  use ::OmniAuth::Builder do
+    provider :google_oauth2, config.oauth[:google]['key'], config.oauth[:google]['secret']
+  end
+
   # api formatter
   use Yodatra::ApiFormatter do |status, headers, response|
     if headers['Content-Type'] =~ /application\/json/
@@ -34,6 +40,12 @@ class Api < Yodatra::Base
     end
     [status, headers, response]
   end
+
+  # Omniauth callback
+  use OmniauthController
+
+  # Auth
+  user ValidUserMiddleware
 
   use IdeasController
   use VoteController

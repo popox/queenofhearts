@@ -1,0 +1,3 @@
+google:
+  key: <%=ENV['GOOGLE_CLIENT_ID']?>
+  secret: <%=ENV['GOOGLE_CLIENT_SECRET']?>
